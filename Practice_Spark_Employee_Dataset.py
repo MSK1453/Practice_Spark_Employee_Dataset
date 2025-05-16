@@ -77,3 +77,21 @@ df_repart.show()
 df.write.mode("overwrite").option("Header", True).partitionBy("City").csv("/Users/shivakrishnameda/Documents/DATA_SETS/Processed_by_CITY/")
 
 df.write.mode("Append").option("Header", True).partitionBy("Education").csv("/Users/shivakrishnameda/Documents/DATA_SETS/Processed_by_Education/")
+
+# Partitioning
+df.write.mode("overwrite").option("Header", True).partitionBy("City").parquet("/Users/shivakrishnameda/Documents/DATA_SETS/CITY/")
+
+df.write.mode("overwrite").option("Header", True).partitionBy("Education").csv("/Users/shivakrishnameda/Documents/DATA_SETS/Education/")
+
+df_City = spark.read.parquet("/Users/shivakrishnameda/Documents/DATA_SETS/City/")
+df_Education = spark.read.option("header", True).csv("/Users/shivakrishnameda/Documents/DATA_SETS/Education/")
+df_pune_result = df_City.filter(F.col("City") == "Pune")
+df_bangalore_result = df_City.filter(F.col("City") == "Bangalore")
+df_newdelhi_result = df_City.filter(F.col("City") == "New Delhi")
+df_phd = df_Education.filter(F.col("Education") == "PHD" & F.col("City") == "New Delhi")
+
+# Print counts so you actually see them
+print("Pune Count:", df_pune_result.count())
+print("Bangalore Count:", df_bangalore_result.count())
+print("New Delhi Count:", df_newdelhi_result.count())
+print("phd_degree Count:", df_phd.count())
